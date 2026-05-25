@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Node
+node_modules/
+.next/
+out/
+
+# Docker volumes / data
+postgres_data/
+redis_data/
+minio_data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Models cache (large AI model files)
+models_cache/
+*.pt
+*.pth
+*.onnx
+*.bin
