@@ -3,7 +3,8 @@
 import { Design } from '@/lib/types';
 import { useStore } from '@/lib/store';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost/api';
+// Hardcoded API URL
+const API_URL = 'http://localhost/api';
 
 function getLayerImageUrl(maskStoragePath: string): string {
   const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : '';

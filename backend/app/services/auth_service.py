@@ -7,9 +7,13 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from app.config import settings
 from app.database import get_db
 from app.models.user import User
+
+# Hardcoded JWT Settings
+JWT_SECRET_KEY = "8f9a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a"
+JWT_ALGORITHM = "HS256"
+JWT_EXPIRY_HOURS = 24
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 security = HTTPBearer()
@@ -26,15 +30,15 @@ class AuthService:
     
     @staticmethod
     def create_jwt_token(user_id: str) -> str:
-        expires = datetime.utcnow() + timedelta(hours=settings.JWT_EXPIRY_HOURS)
+        expires = datetime.utcnow() + timedelta(hours=JWT_EXPIRY_HOURS)
         to_encode = {
             "sub": str(user_id),
             "exp": expires
         }
         encoded_jwt = jwt.encode(
             to_encode,
-            settings.JWT_SECRET_KEY,
-            algorithm=settings.JWT_ALGORITHM
+            JWT_SECRET_KEY,
+            algorithm=JWT_ALGORITHM
         )
         return encoded_jwt
     
@@ -43,8 +47,8 @@ class AuthService:
         try:
             payload = jwt.decode(
                 token,
-                settings.JWT_SECRET_KEY,
-                algorithms=[settings.JWT_ALGORITHM]
+                JWT_SECRET_KEY,
+                algorithms=[JWT_ALGORITHM]
             )
             user_id: str = payload.get("sub")
             if user_id is None:

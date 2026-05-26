@@ -9,7 +9,8 @@ import {
   UploadResponse,
 } from './types';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost/api';
+// Hardcoded API URL
+const API_URL = 'http://localhost/api';
 
 function getAuthToken(): string | null {
   if (typeof window === 'undefined') return null;
