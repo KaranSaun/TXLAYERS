@@ -1,6 +1,25 @@
 version: '3.8'
 
 services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: texlayer_postgres
+    environment:
+      POSTGRES_DB: texlayer_db
+      POSTGRES_USER: texlayer
+      POSTGRES_PASSWORD: texlayer_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - texlayer_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U texlayer -d texlayer_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   redis:
     image: redis:7-alpine
     container_name: texlayer_redis
@@ -63,7 +82,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: postgresql+asyncpg://admin:Donear%232026%24@donear-auromation26.cn6qkoe6i58s.ap-south-1.rds.amazonaws.com:5432/texlayer_db
+      DATABASE_URL: postgresql+asyncpg://texlayer:texlayer_pass@postgres:5432/texlayer_db
       REDIS_URL: redis://redis:6379/0
       MINIO_ENDPOINT: minio:9000
       MINIO_ACCESS_KEY: minioadmin
@@ -78,8 +97,10 @@ services:
       MAX_COLORWAYS: 10
       MODEL_PATH: /app/models_cache
       CELERY_CONCURRENCY: 2
-      ALLOWED_ORIGINS: http://localhost:3000,http://localhost,http://13.233.172.25,http://13.233.172.25:3000
+      ALLOWED_ORIGINS: http://localhost:3000,http://localhost
     depends_on:
+      postgres:
+        condition: service_healthy
       redis:
         condition: service_healthy
       minio:
@@ -97,7 +118,7 @@ services:
       - ./backend:/app
       - model_cache:/app/models_cache
     environment:
-      DATABASE_URL: postgresql+asyncpg://admin:Donear%232026%24@donear-auromation26.cn6qkoe6i58s.ap-south-1.rds.amazonaws.com:5432/texlayer_db
+      DATABASE_URL: postgresql+asyncpg://texlayer:texlayer_pass@postgres:5432/texlayer_db
       REDIS_URL: redis://redis:6379/0
       MINIO_ENDPOINT: minio:9000
       MINIO_ACCESS_KEY: minioadmin
@@ -113,6 +134,8 @@ services:
       MODEL_PATH: /app/models_cache
       CELERY_CONCURRENCY: 2
     depends_on:
+      postgres:
+        condition: service_healthy
       redis:
         condition: service_healthy
       minio:
@@ -133,7 +156,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      NEXT_PUBLIC_API_URL: http://13.233.172.25/api
+      NEXT_PUBLIC_API_URL: http://localhost/api
     depends_on:
       - backend
     networks:
@@ -157,5 +180,6 @@ networks:
     driver: bridge
 
 volumes:
+  postgres_data:
   minio_data:
   model_cache:

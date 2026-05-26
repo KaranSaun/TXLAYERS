@@ -1,35 +1,36 @@
+import os
 from typing import List
 
 
 class Settings:
-    # Database Configuration - hardcoded RDS
-    DATABASE_URL: str = "postgresql+asyncpg://admin:Donear%232026%24@donear-auromation26.cn6qkoe6i58s.ap-south-1.rds.amazonaws.com:5432/texlayer_db"
+    # Database - reads from env var set by docker-compose (local postgres or RDS)
+    DATABASE_URL: str = os.environ.get("DATABASE_URL", "postgresql+asyncpg://texlayer:texlayer_pass@postgres:5432/texlayer_db")
     
-    # Redis Configuration - hardcoded
-    REDIS_URL: str = "redis://redis:6379/0"
+    # Redis
+    REDIS_URL: str = os.environ.get("REDIS_URL", "redis://redis:6379/0")
     
-    # MinIO Configuration - hardcoded
-    MINIO_ENDPOINT: str = "minio:9000"
-    MINIO_ACCESS_KEY: str = "minioadmin"
-    MINIO_SECRET_KEY: str = "minioadmin"
-    MINIO_BUCKET_UPLOADS: str = "uploads"
-    MINIO_BUCKET_OUTPUTS: str = "outputs"
+    # MinIO
+    MINIO_ENDPOINT: str = os.environ.get("MINIO_ENDPOINT", "minio:9000")
+    MINIO_ACCESS_KEY: str = os.environ.get("MINIO_ACCESS_KEY", "minioadmin")
+    MINIO_SECRET_KEY: str = os.environ.get("MINIO_SECRET_KEY", "minioadmin")
+    MINIO_BUCKET_UPLOADS: str = os.environ.get("MINIO_BUCKET_UPLOADS", "uploads")
+    MINIO_BUCKET_OUTPUTS: str = os.environ.get("MINIO_BUCKET_OUTPUTS", "outputs")
     MINIO_SECURE: bool = False
     
-    # JWT Authentication - hardcoded
-    JWT_SECRET_KEY: str = "8f9a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a"
-    JWT_ALGORITHM: str = "HS256"
-    JWT_EXPIRY_HOURS: int = 24
+    # JWT Authentication
+    JWT_SECRET_KEY: str = os.environ.get("JWT_SECRET_KEY", "8f9a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a")
+    JWT_ALGORITHM: str = os.environ.get("JWT_ALGORITHM", "HS256")
+    JWT_EXPIRY_HOURS: int = int(os.environ.get("JWT_EXPIRY_HOURS", "24"))
     
-    # AI Processing Configuration - hardcoded
+    # AI Processing Configuration
     DELTA_E_MERGE_THRESHOLD: float = 0.4
     MAX_LAYERS: int = 50
     MAX_COLORWAYS: int = 10
     MODEL_PATH: str = "/app/models_cache"
     CELERY_CONCURRENCY: int = 2
     
-    # CORS Configuration - hardcoded (change this for production)
-    ALLOWED_ORIGINS: str = "http://localhost:3000,http://localhost,http://localhost:80"
+    # CORS
+    ALLOWED_ORIGINS: str = os.environ.get("ALLOWED_ORIGINS", "http://localhost:3000,http://localhost")
     
     @property
     def allowed_origins_list(self) -> List[str]:
