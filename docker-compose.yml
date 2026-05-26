@@ -78,7 +78,7 @@ services:
       MAX_COLORWAYS: 10
       MODEL_PATH: /app/models_cache
       CELERY_CONCURRENCY: 2
-      ALLOWED_ORIGINS: http://localhost:3000,http://localhost
+      ALLOWED_ORIGINS: http://localhost:3000,http://localhost,http://13.233.172.25,http://13.233.172.25:3000
     depends_on:
       redis:
         condition: service_healthy
@@ -133,7 +133,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost/api
+      NEXT_PUBLIC_API_URL: http://13.233.172.25/api
     depends_on:
       - backend
     networks:
