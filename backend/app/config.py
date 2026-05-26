@@ -2,8 +2,8 @@ from typing import List
 
 
 class Settings:
-    # Database Configuration - hardcoded
-    DATABASE_URL: str = "postgresql+asyncpg://texlayer:texlayer_pass@postgres:5432/texlayer_db"
+    # Database Configuration - hardcoded RDS
+    DATABASE_URL: str = "postgresql+asyncpg://admin:Donear%232026%24@donear-auromation26.cn6qkoe6i58s.ap-south-1.rds.amazonaws.com:5432/texlayer_db"
     
     # Redis Configuration - hardcoded
     REDIS_URL: str = "redis://redis:6379/0"
